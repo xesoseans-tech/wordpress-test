@@ -1,51 +1,28 @@
 <?php
 /**
- * The template for displaying search results pages
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#search-result
+ * Template part for displaying the hamburger modal
  *
  * @package Shopwell
  */
-
-get_header();
 ?>
-<?php if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_location( 'archive' ) ) { ?>
-	<div class="site-content-container">
-		<div id="primary" class="content-area">
-			<main id="main" class="site-main">
-				<?php
-				if ( have_posts() ) :
 
-					do_action( 'shopwell_before_search_loop' );
-
-					/* Start the Loop */
-					while ( have_posts() ) :
-						the_post();
-
-						$content_template = apply_filters( 'shopwell_content_template_part', get_post_type() );
-
-						/**
-						 * Run the loop for the search to output the results.
-						 * If you want to overload this in a child theme then include a file
-						 * called content-search.php and that will be used instead.
-						 */
-						get_template_part( 'template-parts/content/content', $content_template );
-
-					endwhile;
-
-					do_action( 'shopwell_after_search_loop' );
-
-				else :
-
-					get_template_part( 'template-parts/content/content', 'none' );
-
-				endif;
-				?>
-			</main>
+<div id="search-modal" class="modal search-modal">
+	<div class="modal__backdrop"></div>
+	<div class="modal__container">
+		<div class="modal__header header-search--form">
+			<?php
+			echo do_shortcode( \Shopwell\Helper::get_option( 'header_search_shortcode' ) );
+			?>
 		</div>
 
-	<?php get_sidebar(); ?>
+		<div class="modal__content">
+			<?php
+			if ( \Shopwell\Helper::get_option( 'header_mobile_search_trending_searches' ) ) {
+				$args['trending_searches'] = true;
+				\Shopwell\Header\Search::trendings( $args );
+			}
+			?>
+		</div>
+		<button class="modal__button-close shopwell-button--text" type="submit"><?php echo \Shopwell\Icon::get_svg( 'close' ); ?> <?php esc_html_e( 'Close', 'shopwell' ); ?></button>
 	</div>
-<?php } ?>
-<?php
-get_footer();
+</div>
